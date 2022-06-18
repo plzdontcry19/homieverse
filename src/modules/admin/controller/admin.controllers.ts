@@ -8,6 +8,6 @@ export class AdminController {
   @Get()
   @UseInterceptors(ApiResponseInterceptor)
   getHello(): string {
-    return 'testing!'
+    return 'testing!!!!'
   }
 }
