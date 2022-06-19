@@ -30,7 +30,7 @@
         "@nestjs/schedule": "^1.1.0",
         "@nestjs/swagger": "^5.2.1",
         "@nestjs/terminus": "^8.0.1",
-        "@nestjs/typeorm": "^8.0.2",
+        "@nestjs/typeorm": "8.0.2",
         "axios": "^0.27.2",
         "class-transformer": "^0.4.0",
         "class-validator": "^0.13.1",
@@ -46,7 +46,7 @@
         "rxjs": "^7.5.5",
         "stripe": "^8.219.0",
         "swagger-ui-express": "^4.4.0",
-        "typeorm": "^0.2.38"
+        "typeorm": "0.2.38"
     },
     "devDependencies": {
         "@nestjs/cli": "^8.0.0",

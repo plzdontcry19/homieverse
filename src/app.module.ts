@@ -25,7 +25,7 @@ import { ModuleRoutes } from './router.module'
         entities: Entities,
         type: 'postgres',
         url: process.env.DATABASE_URI as string,
-        useUTC: false,
+        useUTC: true,
         logging: process.env.VERSION === 'local',
       }),
     }),
