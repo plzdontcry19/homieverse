@@ -1,23 +1,38 @@
-import { Body, Controller, Get, Post, UseFilters, UseInterceptors } from '@nestjs/common'
-import axios from 'axios'
+import { Body, Controller, Delete, Get, Param, Post, Put, UseFilters, UseInterceptors } from '@nestjs/common'
 import { ApiExceptionFilter } from 'src/exceptions/api-exception.filter'
 import { ApiResponseInterceptor } from 'src/interceptors/api-response.interceptor'
 import { AdminRequestDTO } from '../dtos/admin-request.dto'
+import { AdminService } from '../services/admin.service'
 
 @Controller()
 @UseInterceptors(ApiResponseInterceptor)
 @UseFilters(ApiExceptionFilter)
 export class AdminController {
-  constructor() {}
+  constructor(private adminService: AdminService) { }
 
   @Get()
   async testing() {
-    const result = await axios.get('https://pokeapi.co/api/v2/pokemon/ditto')
-    return result.data
+    return await this.adminService.findManyTesting()
   }
 
+  @Get('trx')
+  async trx() {
+    return await this.adminService.trx()
+  }
+
+
   @Post()
-  async postest(@Body() body: AdminRequestDTO) {
-    return body
+  async create(@Body() body: AdminRequestDTO) {
+    return await this.adminService.createTesting()
+  }
+
+  @Put(':id')
+  async edit(@Param('id') id: number) {
+    return await this.adminService.editTesting(id)
+  }
+
+  @Delete(':id')
+  async delete(@Param('id') id: number) {
+    return await this.adminService.deleteTesting(id)
   }
 }

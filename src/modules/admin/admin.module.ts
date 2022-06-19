@@ -1,11 +1,19 @@
 import { Module } from '@nestjs/common'
-import { ApiLogger } from 'src/loggers/api-logger'
 import { Services } from './admin.services'
 import { Controllers } from './admin.controllers'
+import { TypeOrmModule } from '@nestjs/typeorm'
+import { Repositories } from './admin.repositories'
+import { PostgresConnectionEnum } from 'src/enums/database.connection'
+import { ConfigModule } from '@nestjs/config'
 
 @Module({
-  imports: [],
-  providers: [ApiLogger, ...Services],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: ['.env'],
+    }),
+    TypeOrmModule.forFeature([...Repositories], PostgresConnectionEnum.WEB),
+  ],
+  providers: [...Services,],
   controllers: Controllers,
 })
-export class AdminModule {}
+export class AdminModule { }
