@@ -4,6 +4,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { useContainer } from 'class-validator'
 import { AppModule } from './app.module'
 import { ApiLogger } from './loggers/api-logger'
+import * as bodyParser from 'body-parser'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -11,10 +12,15 @@ async function bootstrap() {
   app.useLogger(new ApiLogger())
   app.useGlobalPipes(
     new ValidationPipe({
+      transform: true,
       disableErrorMessages: false,
     }),
   )
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
+
+  app.use(bodyParser.json({ limit: '50mb' }))
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
+  app.enableCors()
 
   const config = new DocumentBuilder()
     .setTitle(`${((process.env.APP_ENV as string) || 'HELLO').toUpperCase()} API DOC`)
@@ -26,6 +32,14 @@ async function bootstrap() {
     )
     .setVersion('1.0')
     .addTag(process.env.APP_ENV)
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'Token',
+      },
+      'access-token',
+    )
     .build()
 
   const document = SwaggerModule.createDocument(app, config)

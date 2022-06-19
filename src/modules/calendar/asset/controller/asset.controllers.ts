@@ -12,6 +12,7 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiCreatedResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger'
 import { Response } from 'express'
 
 import { ApiExceptionFilter } from 'src/exceptions/api-exception.filter'
@@ -33,7 +34,18 @@ export class AssetController {
   @UseInterceptors(ApiResponseInterceptor)
   @UseGuards(MemberGuard)
   @HttpCode(HttpStatus.CREATED)
-  public async create(@Body() body: InsertAssetRequestDTO) {
+  @ApiCreatedResponse({
+    description: 'create asset successfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'invalid credential',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'internal sever error',
+  })
+  @ApiBearerAuth()
+  public async createAsset(@Body() body: InsertAssetRequestDTO) {
     const { asset_url } = body
 
     return await this.assetService.createAsset({
@@ -43,6 +55,18 @@ export class AssetController {
 
   @Get(':id')
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: 200,
+    description: 'find asset successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'asset not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'internal sever error',
+  })
   public async findAsset(@Param() param: FindAssetRequestDTO, @Res() res: Response) {
     const { id } = param
 
@@ -56,11 +80,20 @@ export class AssetController {
 
   @Put(':id')
   @HttpCode(HttpStatus.OK)
-  public async updateAsset(
-    @Param() param: UpdateAssetParamRequestDTO,
-    @Body() body: UpdateAssetRequestDTO,
-    @Res() res: Response,
-  ) {
+  @UseGuards(MemberGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'update asset successfully',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'asset not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'internal sever error',
+  })
+  public async updateAsset(@Param() param: UpdateAssetParamRequestDTO, @Body() body: UpdateAssetRequestDTO) {
     await this.assetService.updateAsset({
       id: param.id,
       assetUrl: body.asset_url,

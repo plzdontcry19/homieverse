@@ -4,8 +4,6 @@ export interface IBusinessErrorCode {
 }
 
 export class BusinessErrorCode {
-  private constructor() {}
-
   static USER_NOT_FOUND: IBusinessErrorCode = {
     code: 'USER_NOT_FOUND',
     message: 'User not found',
@@ -16,6 +14,10 @@ export class BusinessErrorCode {
     message: 'Project name already exists',
   }
 
+  static MINT_METHOD_NAME_ALREADY_EXIST: IBusinessErrorCode = {
+    code: 'MINT_METHOD_NAME_ALREADY_EXIST',
+    message: 'Mint method already exists',
+  }
   static ASSET_NOT_FOUND: IBusinessErrorCode = {
     code: 'ASSET_NOT_FOUND',
     message: 'Asset not found',

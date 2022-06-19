@@ -1,42 +1,67 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
-  Put,
   UseFilters,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiResponse, ApiUnauthorizedResponse } from '@nestjs/swagger'
 import { ApiExceptionFilter } from 'src/exceptions/api-exception.filter'
 import { MemberGuard } from 'src/guards/member.guard'
 import { ApiResponseInterceptor } from 'src/interceptors/api-response.interceptor'
 import { InsertProjectRequestDTO } from '../dtos/insert-project-request.dto'
-import { IMintInfo } from '../services/proejct.service.interfaces'
+import { IMintInfoInput } from '../services/proejct.service.interfaces'
 import { ProjectService } from '../services/project.service'
 
-@Controller()
+@Controller('project')
 @UseInterceptors(ApiResponseInterceptor)
 @UseFilters(ApiExceptionFilter)
 export class ProjectController {
   constructor(private projectService: ProjectService) {}
 
   @Get()
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    description: 'find many project,query param soon',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'internal sever error',
+  })
   async findProject() {
-    return
+    return await this.projectService.findManyProject()
   }
 
   @Post()
   @UseGuards(MemberGuard)
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() body: InsertProjectRequestDTO) {
+  @ApiCreatedResponse({
+    description: 'create project successfully',
+  })
+  @ApiUnauthorizedResponse({
+    description: 'valid credential',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'asset not found,mint method not found',
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'internal sever error',
+  })
+  @ApiResponse({
+    status: 422,
+    description: 'project name is exist',
+  })
+  @ApiBearerAuth()
+  async createProject(@Body() body: InsertProjectRequestDTO) {
     const { name, description, asset_id_list: assetIdList, mint_info_list } = body
 
-    const mintInfoList: IMintInfo[] = []
+    const mintInfoList: IMintInfoInput[] = []
     mint_info_list.forEach((element) => {
       const {
         type,
@@ -64,15 +89,5 @@ export class ProjectController {
       assetIdList,
       mintInfoList,
     })
-  }
-
-  @Put(':id')
-  async edit(@Param('id') id: number) {
-    return
-  }
-
-  @Delete(':id')
-  async delete(@Param('id') id: number) {
-    return
   }
 }

@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer'
 
-export class ProjectOutputEntity {
+export class FindMintMethodResponseDTO {
   @Expose()
   id: number
 

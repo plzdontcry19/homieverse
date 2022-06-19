@@ -1,8 +1,6 @@
 import { QueryRunner } from 'typeorm'
 
 export class TransactionWrapper {
-  private constructor() {}
-
   public static async runInTransaction(
     queryRunner: QueryRunner,
     task: () => Promise<void>,
