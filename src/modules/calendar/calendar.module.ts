@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common'
-import { Services } from './admin.services'
-import { Controllers } from './admin.controllers'
+import { Services } from './calendar.services'
+import { Controllers } from './calendar.controllers'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { Repositories } from './admin.repositories'
+import { Repositories } from './calendar.repositories'
 import { PostgresConnectionEnum } from 'src/enums/database.connection'
 import { ConfigModule } from '@nestjs/config'
 
@@ -13,7 +13,7 @@ import { ConfigModule } from '@nestjs/config'
     }),
     TypeOrmModule.forFeature([...Repositories], PostgresConnectionEnum.WEB),
   ],
-  providers: [...Services,],
+  providers: [...Services],
   controllers: Controllers,
 })
-export class AdminModule { }
+export class CalendarModule {}

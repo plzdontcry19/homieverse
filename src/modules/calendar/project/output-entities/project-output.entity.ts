@@ -1,12 +1,12 @@
 import { Expose } from 'class-transformer'
 
-export class TestingOutputOutputEntity {
+export class ProjectOutputEntity {
   @Expose()
   id: number
 
   @Expose()
-  key: string
+  name: number
 
   @Expose()
-  value: string
+  description: string
 }

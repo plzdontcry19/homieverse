@@ -1,6 +1,6 @@
 import { Routes } from '@nestjs/core'
 import { AppModule } from './app.module'
-import { AdminModule } from './modules/admin/admin.module'
+import { CalendarModule } from './modules/calendar/calendar.module'
 
 export const ModuleRoutes: Routes = [
   {
@@ -8,7 +8,7 @@ export const ModuleRoutes: Routes = [
     module: AppModule,
   },
   {
-    path: '/admin',
-    module: AdminModule,
+    path: '/calendar',
+    module: CalendarModule,
   },
 ]

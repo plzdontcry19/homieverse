@@ -10,4 +10,24 @@ export class BusinessErrorCode {
     code: 'USER_NOT_FOUND',
     message: 'User not found',
   }
+
+  static PROJECT_NAME_ALREADY_EXIST: IBusinessErrorCode = {
+    code: 'PROJECT_NAME_ALREADY_EXIST',
+    message: 'Project name already exists',
+  }
+
+  static ASSET_NOT_FOUND: IBusinessErrorCode = {
+    code: 'ASSET_NOT_FOUND',
+    message: 'Asset not found',
+  }
+
+  static MINT_METHOD_NOT_FOUND: IBusinessErrorCode = {
+    code: 'MINT_METHOD_NOT_FOUND',
+    message: 'Mint method not found',
+  }
+
+  static INVALID_ASSET_URL: IBusinessErrorCode = {
+    code: 'INVALID_ASSET_URL',
+    message: 'Invalid asset url',
+  }
 }

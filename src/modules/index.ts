@@ -1,3 +1,3 @@
-import { AdminModule } from './admin/admin.module'
+import { CalendarModule } from './calendar/calendar.module'
 
-export const Modules = [AdminModule]
+export const Modules = [CalendarModule]

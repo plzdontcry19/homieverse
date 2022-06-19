@@ -1,5 +1,7 @@
 import { decode, Jwt } from 'jsonwebtoken'
 import * as R from 'ramda'
+import { AssetType } from 'src/const/asset-type'
+import { IGetBase64Output } from './index.interfaces'
 
 export class Helpers {
   static isEmptyObject(obj: any): boolean {
@@ -70,5 +72,26 @@ export class Helpers {
       return undefined
     }
     return new Date(value * 1000)
+  }
+
+  static getBase64(str: string): IGetBase64Output {
+    if (!str.startsWith('data:')) {
+      return undefined
+    }
+
+    if (str.search(';base64,') === -1) {
+      return undefined
+    }
+
+    const base64Position: number = str.search(';base64,')
+    const mimeType = str.slice(5, base64Position)
+    if (!AssetType.includes(mimeType)) {
+      return undefined
+    }
+    const code: string = str.slice(base64Position + 8)
+    return {
+      code,
+      mimeType,
+    }
   }
 }

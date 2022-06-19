@@ -1,12 +1,12 @@
 import { QueryRunner } from 'typeorm'
 
 export class TransactionWrapper {
-  private constructor() { }
+  private constructor() {}
 
   public static async runInTransaction(
     queryRunner: QueryRunner,
     task: () => Promise<void>,
-    isThrow: boolean = true,
+    isThrow = true,
   ): Promise<void> {
     try {
       await queryRunner.startTransaction()
