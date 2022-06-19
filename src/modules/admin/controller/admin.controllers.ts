@@ -1,4 +1,5 @@
-import { Body, Controller, Post, UseFilters, UseInterceptors } from '@nestjs/common'
+import { Body, Controller, Get, Post, UseFilters, UseInterceptors } from '@nestjs/common'
+import axios from 'axios'
 import { ApiExceptionFilter } from 'src/exceptions/api-exception.filter'
 import { ApiResponseInterceptor } from 'src/interceptors/api-response.interceptor'
 import { AdminRequestDTO } from '../dtos/admin-request.dto'
@@ -9,8 +10,14 @@ import { AdminRequestDTO } from '../dtos/admin-request.dto'
 export class AdminController {
   constructor() {}
 
+  @Get()
+  async testing() {
+    const result = await axios.get('https://pokeapi.co/api/v2/pokemon/ditto')
+    return result.data
+  }
+
   @Post()
-  testing(@Body() body: AdminRequestDTO): any {
+  async postest(@Body() body: AdminRequestDTO) {
     return body
   }
 }

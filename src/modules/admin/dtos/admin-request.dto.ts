@@ -1,8 +1,8 @@
 import { IsString } from 'class-validator'
 export class AdminRequestDTO {
   @IsString()
-  test: string
+  key: string
 
   @IsString()
-  api: string
+  value: string
 }

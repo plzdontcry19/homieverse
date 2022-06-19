@@ -1,0 +1,22 @@
+    swagger: "2.0"
+    info:
+      title: "homieverse"
+      description: "for testing only."
+      version: "1.0.0"
+    host: "api-homie-staging.machiniverse.xyz"
+    schemes:
+      - "https"
+    paths:
+      "/":
+        get:
+          description: "gat"
+          operationId: "hello"
+          x-google-backend:
+            address: https://homieverse-7h5lecmnaq-uc.a.run.app
+          responses:
+            200:
+              description: "Success."
+              schema:
+                type: string
+            400:
+              description: "The IATA code is invalid or missing."

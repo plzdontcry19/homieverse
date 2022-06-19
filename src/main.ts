@@ -18,7 +18,7 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle(`${((process.env.APP_ENV as string) || 'HELLO').toUpperCase()} API DOC`)
-    .setDescription('for testing with only')
+    .setDescription('for testing only')
     .setContact(
       'Naraphat Sanujit',
       'https://www.linkedin.com/in/naraphat-sanujit-a30686224/',
