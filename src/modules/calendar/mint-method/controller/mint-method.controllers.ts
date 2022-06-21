@@ -41,6 +41,7 @@ export class MintMethodController {
     status: 422,
     description: 'exist',
   })
+  @ApiBearerAuth()
   async findMintMethod() {
     return await this.mintMethodService.findMintMethod()
   }

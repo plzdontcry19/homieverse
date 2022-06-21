@@ -23,6 +23,11 @@ export class BusinessErrorCode {
     message: 'Asset not found',
   }
 
+  static PROJECT_NOT_FOUND: IBusinessErrorCode = {
+    code: 'PROJECT_NOT_FOUND',
+    message: 'Proeject not found',
+  }
+
   static MINT_METHOD_NOT_FOUND: IBusinessErrorCode = {
     code: 'MINT_METHOD_NOT_FOUND',
     message: 'Mint method not found',

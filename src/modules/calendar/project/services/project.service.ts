@@ -186,6 +186,6 @@ export class ProjectService {
       },
     )
 
-    plainToClass(InsertProjectResponseDTO, { project_id: returnProjectId }, { excludeExtraneousValues: true })
+    return plainToClass(InsertProjectResponseDTO, { project_id: returnProjectId }, { excludeExtraneousValues: true })
   }
 }

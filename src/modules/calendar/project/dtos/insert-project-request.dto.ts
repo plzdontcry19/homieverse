@@ -25,7 +25,7 @@ export class MintInfoDTO {
 
   @IsOptional()
   @IsString()
-  @ApiProperty({ type: String, description: 'mint infomation' })
+  @ApiProperty({ type: String, description: 'mint infomation', required: false })
   description: string
 
   @IsNumber()
@@ -49,7 +49,12 @@ export class MintInfoDTO {
   @IsOptional()
   @Transform((value) => Helpers.convertToDate(value.value))
   @IsDate()
-  @ApiProperty({ type: Number, description: 'date unix time,see https://www.unixtimestamp.com/', example: 1666948245 })
+  @ApiProperty({
+    type: Number,
+    description: 'date unix time,see https://www.unixtimestamp.com/',
+    example: 1666948245,
+    required: false,
+  })
   end_date: Date
 }
 

@@ -56,7 +56,7 @@ export class ProjectRepository extends Repository<ProjectEntity> {
       .leftJoin(ProjectHasMintInfoEntity, 'project_has_mint_info', 'project.id = project_has_mint_info.project_id')
       .leftJoin(MintInfoEntity, 'mint_info', 'project_has_mint_info.mint_info_id = mint_info.id')
       .leftJoin(MintMethodEntity, 'mint_method', 'mint_info.mint_method_id = mint_method.id')
-      .groupBy(`project.id,asset.id,mint_info.id,mint_method.id`)
+    // .groupBy(`project.id,asset.id,mint_info.id,mint_method.id`)
 
     const result = await query.getRawMany()
     return plainToClass(CustomProjectOutputEntity, result, { excludeExtraneousValues: true })

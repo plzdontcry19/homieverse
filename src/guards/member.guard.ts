@@ -7,6 +7,8 @@ export class MemberGuard implements CanActivate {
     const token = request.headers.authorization?.startsWith('Bearer')
       ? request.headers.authorization.split(' ')[1]
       : request.headers.authorization
+    console.log('request.headers;', request.headers)
+
     if (!token) {
       return Promise.reject(new UnauthorizedException())
     }
