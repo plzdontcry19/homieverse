@@ -14,7 +14,7 @@ import { VotingService } from '../services/voting.service'
 @UseInterceptors(ApiResponseInterceptor)
 @UseFilters(ApiExceptionFilter)
 export class VotingController {
-  constructor(private votingService: VotingService) {}
+  constructor(private votingService: VotingService) { }
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -41,7 +41,7 @@ export class VotingController {
       projectId,
       status,
       description,
-      ipAddress: '123444',
+      ipAddress,
     })
   }
 

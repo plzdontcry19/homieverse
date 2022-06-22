@@ -30,7 +30,7 @@ async function bootstrap() {
       'https://www.linkedin.com/in/naraphat-sanujit-a30686224/',
       'naraphat.naem@gmail.com',
     )
-    .setVersion('1.1.0')
+    .setVersion('1.1.1')
     .addTag(process.env.APP_ENV)
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'access-token')
     .build()
