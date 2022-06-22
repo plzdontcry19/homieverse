@@ -14,6 +14,9 @@ export class ProjectHasUserVotingEntity extends BaseEntity {
   @Column({ type: 'int4', nullable: true })
   user_id: number
 
+  @Column({ type: 'varchar', length: 64, nullable: true })
+  ip_address: string
+
   @Column({ nullable: false, default: true })
   active: boolean
 

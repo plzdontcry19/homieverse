@@ -28,6 +28,16 @@ export class BusinessErrorCode {
     message: 'Proeject not found',
   }
 
+  static VOTING_NOT_FOUND: IBusinessErrorCode = {
+    code: 'VOTING_NOT_FOUND',
+    message: 'Voting not found',
+  }
+
+  static USER_HAS_VOTED: IBusinessErrorCode = {
+    code: 'USER_HAS_VOTING',
+    message: 'User has voting',
+  }
+
   static MINT_METHOD_NOT_FOUND: IBusinessErrorCode = {
     code: 'MINT_METHOD_NOT_FOUND',
     message: 'Mint method not found',

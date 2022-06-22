@@ -24,13 +24,13 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle(`${((process.env.APP_ENV as string) || 'HELLO').toUpperCase()} API DOC`)
-    .setDescription('for testing only')
+    .setDescription('add field in find project, voting unique, update document')
     .setContact(
       'Naraphat Sanujit',
       'https://www.linkedin.com/in/naraphat-sanujit-a30686224/',
       'naraphat.naem@gmail.com',
     )
-    .setVersion('1.0')
+    .setVersion('1.1.0')
     .addTag(process.env.APP_ENV)
     .addBearerAuth({ type: 'http', scheme: 'bearer', bearerFormat: 'JWT' }, 'access-token')
     .build()

@@ -33,6 +33,19 @@ export class MintMethodController {
   @ApiResponse({
     status: 200,
     description: 'sucess',
+    schema: {
+      example: {
+        status: 200,
+        data: [
+          {
+            id: 3,
+            name: 'test',
+            description: 'test',
+          },
+        ],
+        message: 'success',
+      },
+    },
   })
   @ApiUnauthorizedResponse({
     description: 'valid credential',

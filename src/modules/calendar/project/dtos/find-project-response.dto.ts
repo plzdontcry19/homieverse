@@ -1,5 +1,6 @@
 import { Expose, Type } from 'class-transformer'
 import { MintTypeEnum } from 'src/enums/mint-type.enum'
+import { VotingStatusEnum } from 'src/enums/voting-status.enum'
 
 export class FindProjectResponseDTO {
   @Expose()
@@ -16,7 +17,22 @@ export class FindProjectResponseDTO {
 
   @Expose()
   @Type(() => MintInfoResponseDTO)
-  mint_info: MintInfoResponseDTO[]
+  mint_info_list: MintInfoResponseDTO[]
+
+  @Expose()
+  mint: number
+
+  @Expose()
+  no_mint: number
+
+  @Expose()
+  not_sure: number
+
+  @Expose()
+  my_voting: VotingStatusEnum
+
+  @Expose()
+  my_description: string
 }
 
 export class MintInfoResponseDTO {

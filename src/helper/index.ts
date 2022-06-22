@@ -94,4 +94,9 @@ export class Helpers {
       mimeType,
     }
   }
+
+  static getPaginatedData(array: any[], offset = 0, limit = 20) {
+    if (limit < 0) return array.slice(offset)
+    return array.slice(offset, offset + limit)
+  }
 }

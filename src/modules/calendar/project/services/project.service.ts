@@ -6,10 +6,11 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { PostgresConnectionEnum } from 'src/enums/database.connection'
 import { DbIsolationLevelEnum } from 'src/enums/db-isolation-level.enum'
 import { TransactionWrapper } from 'src/entity-managers/trans.wrapper'
-import { ICrateProjectInput, IProject } from './proejct.service.interfaces'
+import { ICreateProjectInput, IFindProjectInput, IProject } from './proejct.service.interfaces'
 import { ProjectRepository } from '../repositories/project.repository'
 import { ApiException } from 'src/exceptions/api.exception'
 import { BusinessErrorCode } from 'src/const/business-error-code'
+import { Helpers } from 'src/helper'
 
 import { AssetRepository } from '../../asset/repositories/asset.repository'
 import { ProjectHasAssetRepository } from '../repositories/project-has-asset.repository'
@@ -18,16 +19,27 @@ import { MintInfoRepository } from '../repositories/mint-info.repository'
 import { InsertProjectResponseDTO } from '../dtos/insert-project-response.dto'
 import { ProjectHasMintInfoRepository } from '../repositories/project-has-mint_info.repository'
 import { FindProjectResponseDTO } from '../dtos/find-project-response.dto'
+import { VotingRepository } from '../../voting/repositories/voting.repository'
+import { VotingStatusEnum } from 'src/enums/voting-status.enum'
 
 @Injectable()
 export class ProjectService {
   constructor(
     @InjectRepository(ProjectRepository, PostgresConnectionEnum.WEB)
     private projectRepository: ProjectRepository,
+
+    @InjectRepository(VotingRepository, PostgresConnectionEnum.WEB)
+    private votingRepository: VotingRepository,
   ) {}
 
-  public async findManyProject() {
-    const customProjectList = await this.projectRepository.findManyProject()
+  public async findManyProject(params: IFindProjectInput) {
+    const { projectId, projectName, startDate, endDate, limit, offset, ipAddress } = params
+    const customProjectList = await this.projectRepository.findManyProject({
+      projectId,
+      projectName,
+      startDate,
+      endDate,
+    })
 
     const map = new Map<number, IProject>()
     const mapInfoList: string[] = []
@@ -56,7 +68,7 @@ export class ProjectService {
           project_name,
           project_description,
           asset_id_list: [asset_id],
-          mint_info: [
+          mint_info_list: [
             {
               mint_info_id,
               mint_info_type,
@@ -69,17 +81,25 @@ export class ProjectService {
               mint_method_description,
             },
           ],
+          start_date: start_date,
+          end_date: endDate,
+          mint: 0,
+          no_mint: 0,
+          not_sure: 0,
+          my_voting: null,
+          my_description: null,
         }
         map.set(project_id, project)
         mapInfoList.push(`${project_id}_${mint_info_id}`)
       } else {
         const projectMap = map.get(project_id)
+
         if (!projectMap.asset_id_list.includes(asset_id)) {
           projectMap.asset_id_list.push(asset_id)
         }
 
         if (!mapInfoList.includes(`${project_id}_${mint_info_id}`)) {
-          projectMap.mint_info.push({
+          projectMap.mint_info_list.push({
             mint_info_id,
             mint_info_type,
             mint_info_description,
@@ -92,18 +112,95 @@ export class ProjectService {
           })
           mapInfoList.push(`${project_id}_${mint_info_id}`)
         }
+
+        if (start_date && !projectMap.start_date) {
+          projectMap.start_date = start_date
+        }
+
+        if (start_date && projectMap.start_date) {
+          if (start_date.getTime() < projectMap.start_date.getTime()) {
+            projectMap.start_date = start_date
+          }
+        }
+
+        if (end_date && !projectMap.end_date) {
+          projectMap.end_date = end_date
+        }
+
+        if (end_date && projectMap.end_date) {
+          if (end_date.getTime() > projectMap.end_date.getTime()) {
+            projectMap.end_date = end_date
+          }
+        }
+
         map.set(project_id, projectMap)
       }
     }
 
-    map.forEach((element) => {
-      projectList.push(element)
-    })
+    for (const [key, value] of map) {
+      const { start_date, end_date } = value
 
-    return plainToClass(FindProjectResponseDTO, projectList, { excludeExtraneousValues: true })
+      if (startDate && endDate && end_date) {
+        if (start_date.getTime() >= startDate.getTime() && end_date.getTime() <= endDate.getTime()) {
+          projectList.push(value)
+          continue
+        }
+      } else if (startDate && endDate && !end_date) {
+        if (start_date.getTime() >= startDate.getTime()) {
+          projectList.push(value)
+          continue
+        }
+      } else if (startDate) {
+        if (start_date.getTime() >= startDate.getTime()) {
+          projectList.push(value)
+          continue
+        }
+      } else {
+        projectList.push(value)
+      }
+    }
+
+    let dataResponseList: IProject[] = []
+    if (projectList.length > 0) {
+      dataResponseList = Helpers.getPaginatedData(projectList, limit, offset)
+    }
+
+    for (const dataResponse of dataResponseList) {
+      const { project_id } = dataResponse
+
+      const findDataList = await this.votingRepository.findProjectVotingList({
+        projectId: project_id,
+      })
+
+      const findMyProjectVoting = await this.votingRepository.findOneProjectVoting({
+        projectId: project_id,
+        ipAddress,
+      })
+
+      if (findMyProjectVoting) {
+        const { voting_description, voting_status } = findMyProjectVoting
+        dataResponse.my_voting = voting_status
+        dataResponse.my_description = voting_description
+      }
+
+      if (findDataList.length > 0) {
+        const { voting_list } = findDataList[0]
+        for (const voting of voting_list) {
+          if (voting === VotingStatusEnum.MINT) {
+            dataResponse.mint++
+          } else if (voting === VotingStatusEnum.NO_MINT) {
+            dataResponse.no_mint++
+          } else if (voting === VotingStatusEnum.NOT_SURE) {
+            dataResponse.not_sure++
+          }
+        }
+      }
+    }
+
+    return plainToClass(FindProjectResponseDTO, dataResponseList, { excludeExtraneousValues: true })
   }
 
-  public async createProject(params: ICrateProjectInput) {
+  public async createProject(params: ICreateProjectInput) {
     const { name, description, assetIdList, mintInfoList } = params
 
     let returnProjectId: number

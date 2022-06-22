@@ -17,7 +17,7 @@ import { Helpers } from 'src/helper'
 export class MintInfoDTO {
   @IsEnum(MintTypeEnum)
   @ApiProperty({
-    type: String,
+    enum: ['public', 'private'],
     description: `public or private, private mean allow list mint`,
     example: MintTypeEnum.PRIVATE,
   })
